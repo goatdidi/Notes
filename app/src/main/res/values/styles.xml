@@ -9,8 +9,8 @@
     </style>
     <style name="ThemeOverlay.search" parent="AppTheme">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorWhite</item>
-        <item name="colorPrimaryDark">@color/colorGray</item>
+        <item name="android:editTextColor">@color/ColorWhite</item>
+        <item name="android:textColorHint">@color/ColorGray</item>
     </style>
 
 
