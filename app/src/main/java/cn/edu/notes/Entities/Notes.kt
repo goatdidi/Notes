@@ -3,36 +3,33 @@ package cn.edu.notes.Entities
 import androidx.room.*
 import java.io.Serializable
 @Entity(tableName = "Notes")
-data class Notes (
+ class Notes : Serializable {
     @PrimaryKey(autoGenerate = true)
-    var id:Int,
+    var id: Int?=null
 
     @ColumnInfo(name = "title")
-    var title:String,
+    var title: String?=null
 
     @ColumnInfo(name = "sub_title")
-    var subTitle:String,
+    var subTitle: String?=null
 
     @ColumnInfo(name = "date_time")
-    var dateTime:String,
-
+    var dateTime: String?=null
     @ColumnInfo(name = "note_text")
-    var noteText:String,
+    var noteText: String?=null
 
     @ColumnInfo(name = "img_path")
-    var imgPath:String,
+    var imgPath: String?=null
 
     @ColumnInfo(name = "web_link")
-    var webLink:String,
+    var webLink: String?=null
 
     @ColumnInfo(name = "color")
-    var color:String
+    var color: String?=null
 
-
-
-): Serializable{
     override fun toString():String{
         return "$title : $dateTime"
     }
+
 }
 

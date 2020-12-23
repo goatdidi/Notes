@@ -7,9 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.fragment_home.*
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,5 +39,20 @@ class HomeFragment : Fragment() {
             }
 
 
-    }
 }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        create_notes.setOnClickListener {
+            replaceFragment(CreateNoteFragment.newInstance(),true)
+        }
+    }
+    fun replaceFragment(fragement:Fragment,istranstion:Boolean){
+        val fragementTransition = activity!!.supportFragmentManager.beginTransaction()
+        if (istranstion){
+            fragementTransition.setCustomAnimations(android.R.anim.slide_out_right,android.R.anim.slide_in_left)
+        }
+        fragementTransition.replace(R.id.frame_layout,fragement).addToBackStack(fragement.javaClass.simpleName).commit()
+    }
+    }
+

@@ -4,4 +4,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="notes_title">Notes标题</string>
+    <string name="notes_subtitle">Notes副标题</string>
+    <string name="web_url">输入web url</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">取消</string>
+    <string name="notes_description">输入Notes</string>
 </resources>
