@@ -42,7 +42,7 @@ dependencies {
     implementation "androidx.room:room-runtime:2.2.3"
     implementation "androidx.room:room-ktx:2.2.3"
     kapt "androidx.room:room-compiler:2.2.3"
-
+    compile 'com.makeramen:roundedimageview:2.2.1'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 
     implementation 'pub.devrel:easypermissions:3.0.0'
