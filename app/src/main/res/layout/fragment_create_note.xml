@@ -107,7 +107,7 @@
     <ImageView
             android:layout_height="@dimen/_300sdp"
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_11sdp"
             android:layout_marginStart="@dimen/_10sdp"
             android:id="@+id/imgNote"
             android:layout_marginEnd="@dimen/_10sdp"

@@ -4,6 +4,7 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="notes_title">Notes标题</string>
+    <string name="storage_permission_text">This app needs access to your storage.</string>
     <string name="notes_subtitle">Notes副标题</string>
     <string name="web_url">输入web url</string>
     <string name="ok">Ok</string>

@@ -18,12 +18,17 @@ import cn.edu.notes.database.NotesDatabase
 import cn.edu.notes.util.NoteBottomSheetFragment
 import kotlinx.android.synthetic.main.fragment_create_note.*
 import kotlinx.coroutines.launch
+import pub.devrel.easypermissions.EasyPermissions
 import java.text.SimpleDateFormat
 import java.util.*
+import android.Manifest
+import pub.devrel.easypermissions.AppSettingsDialog
 
 
-class CreateNoteFragment : BaseFragment() {
+class CreateNoteFragment : BaseFragment() ,EasyPermissions.PermissionCallbacks,EasyPermissions.RationaleCallbacks{
     var currencDate:String?=null
+    private var WRITE_STORAGE_PERM=123
+    private var READ_STORAGE_PERM=123
     var selectedColor = "#171C26"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,7 +114,7 @@ class CreateNoteFragment : BaseFragment() {
     }
     private val BroadcastReceiver:BroadcastReceiver = object :BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
-            var actionColor = intent!!.getStringExtra("actionColor")
+            var actionColor = intent!!.getStringExtra("action")
             when(actionColor!!){
                 "Blue" ->{
                     selectedColor = intent.getStringExtra("selectedColor")!!
@@ -135,15 +140,59 @@ class CreateNoteFragment : BaseFragment() {
                     selectedColor = intent.getStringExtra("selectedColor")!!
                     colorView.setBackgroundColor(Color.parseColor(selectedColor))
                 }
+                "Image" ->{
+                    readStorageTask()
+                }
                 else ->{
                     selectedColor = intent.getStringExtra("selectedColor")!!
                 }
             }
         }
     }
-
     override fun onDestroy() {
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(BroadcastReceiver)
         super.onDestroy()
+    }
+    private fun hasReadStoragePerm():Boolean{
+        return EasyPermissions.hasPermissions(requireContext(),Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+    private fun hasWriteStoragePerm():Boolean{
+        return EasyPermissions.hasPermissions(requireContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    }
+    private fun readStorageTask(){
+        if (hasReadStoragePerm()){
+            Toast.makeText(requireContext(),"给予权限",Toast.LENGTH_SHORT).show()
+        }else{
+            EasyPermissions.requestPermissions(
+                requireActivity(),
+                "",
+                READ_STORAGE_PERM,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+        }
+    }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,requireActivity())
+    }
+
+    override fun onPermissionsGranted(p0: Int, p1: MutableList<String>) {
+
+    }
+
+    override fun onPermissionsDenied(p0: Int, p1: MutableList<String>) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(requireActivity(),p1)){
+            AppSettingsDialog.Builder(requireActivity()).build().show()
+        }
+    }
+
+    override fun onRationaleAccepted(p0: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onRationaleDenied(p0: Int) {
+        TODO("Not yet implemented")
     }
 }
