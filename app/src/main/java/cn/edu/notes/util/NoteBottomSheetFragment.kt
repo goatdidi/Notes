@@ -56,6 +56,9 @@ class NoteBottomSheetFragment:BottomSheetDialogFragment() {
                                    dismiss()
                                    behavior.state = BottomSheetBehavior.STATE_COLLAPSED
                                }
+                               else->{
+                                   //todo 最后添加 2020/12/23
+                               }
                            }
                 }
             })
