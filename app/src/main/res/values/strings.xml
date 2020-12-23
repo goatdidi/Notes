@@ -9,4 +9,7 @@
     <string name="ok">Ok</string>
     <string name="cancel">取消</string>
     <string name="notes_description">输入Notes</string>
+    <string name="pick_color">选择颜色</string>
+    <string name="add_image">添加图片</string>
+    <string name="add_web_link">添加外部链接</string>
 </resources>

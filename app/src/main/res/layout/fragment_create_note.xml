@@ -218,7 +218,7 @@
             android:layout_margin="@dimen/_10sdp"/>
 
 
-    -<FrameLayout
+    <FrameLayout
         android:layout_height="@dimen/_40sdp"
         android:layout_width="match_parent"
         app:layout_constraintStart_toStartOf="parent"

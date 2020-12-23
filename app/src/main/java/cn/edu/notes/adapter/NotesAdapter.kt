@@ -1,5 +1,6 @@
 package cn.edu.notes.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,11 @@ class NotesAdapter(val arrList:List<Notes>)
         holder.itemView.tvTitle.text=arrList[position].title
         holder.itemView.tvDesc.text=arrList[position].noteText
         holder.itemView.tvDateTime.text=arrList[position].dateTime
+        if (arrList[position].color!=null){
+            holder.itemView.cardView.setCardBackgroundColor(Color.parseColor(arrList[position].color))
+        }else{
+            holder.itemView.cardView.setCardBackgroundColor(Color.parseColor("#171C26"))
+        }
     }
     class NotesViewHolder(view:View):RecyclerView.ViewHolder(view){
 
