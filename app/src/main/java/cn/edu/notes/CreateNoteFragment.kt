@@ -22,13 +22,19 @@ import pub.devrel.easypermissions.EasyPermissions
 import java.text.SimpleDateFormat
 import java.util.*
 import android.Manifest
+import android.app.Activity.RESULT_OK
+import android.graphics.BitmapFactory
+import android.provider.MediaStore
 import pub.devrel.easypermissions.AppSettingsDialog
+import java.lang.Exception
 
 
 class CreateNoteFragment : BaseFragment() ,EasyPermissions.PermissionCallbacks,EasyPermissions.RationaleCallbacks{
     var currencDate:String?=null
     private var WRITE_STORAGE_PERM=123
     private var READ_STORAGE_PERM=123
+    private var REQUEST_CODE_IMAGE=456
+    private var selectedImagePath = ""
     var selectedColor = "#171C26"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,19 +109,22 @@ class CreateNoteFragment : BaseFragment() ,EasyPermissions.PermissionCallbacks,E
             notes.noteText=etNoteDesc.text.toString()
             notes.dateTime=currencDate
             notes.color=selectedColor
+            notes.imgPath=selectedImagePath
             context?.let {
                 NotesDatabase.getDatabase(it).noteDao().insertNotes(notes)
                 etNoteTitle.setText("")
                 etNoteSubTitle.setText("")
                 etNoteDesc.setText("")
+                imgNote.visibility=View.GONE
+                requireActivity().supportFragmentManager.popBackStack()
             }
         }
 
     }
     private val BroadcastReceiver:BroadcastReceiver = object :BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
-            var actionColor = intent!!.getStringExtra("action")
-            when(actionColor!!){
+            var action = intent!!.getStringExtra("action")
+            when(action!!){
                 "Blue" ->{
                     selectedColor = intent.getStringExtra("selectedColor")!!
                     colorView.setBackgroundColor(Color.parseColor(selectedColor))
@@ -142,6 +151,7 @@ class CreateNoteFragment : BaseFragment() ,EasyPermissions.PermissionCallbacks,E
                 }
                 "Image" ->{
                     readStorageTask()
+                    //layoutWebUrl.visibility = View.GONE
                 }
                 else ->{
                     selectedColor = intent.getStringExtra("selectedColor")!!
@@ -161,14 +171,55 @@ class CreateNoteFragment : BaseFragment() ,EasyPermissions.PermissionCallbacks,E
     }
     private fun readStorageTask(){
         if (hasReadStoragePerm()){
-            Toast.makeText(requireContext(),"给予权限",Toast.LENGTH_SHORT).show()
+            pickImageFromGallery()
         }else{
             EasyPermissions.requestPermissions(
                 requireActivity(),
-                "",
+                getString(R.string.storage_permission_text),
                 READ_STORAGE_PERM,
                 Manifest.permission.READ_EXTERNAL_STORAGE
             )
+        }
+    }
+    private fun pickImageFromGallery() {
+        var intent = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent,REQUEST_CODE_IMAGE)
+        //调用if 发现打开不了相册QAQ
+//        if (intent.resolveActivity(requireActivity().packageManager) != null){
+//            startActivityForResult(intent,REQUEST_CODE_IMAGE)
+//        }
+    }
+
+    private fun getPathFromUri(contentUri: Uri): String? {
+        var filePath:String? = null
+        var cursor = requireActivity().contentResolver.query(contentUri,null,null,null,null)
+        if (cursor == null){
+            filePath = contentUri.path
+        }else{
+            cursor.moveToFirst()
+            var index = cursor.getColumnIndex("_data")
+            filePath = cursor.getString(index)
+            cursor.close()
+        }
+        return filePath
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode==REQUEST_CODE_IMAGE&&resultCode ==RESULT_OK){
+            if(data!=null){
+                var selectedImageUrl=data.data
+                if(selectedImageUrl!=null){
+                    try {
+                        var inputStream = requireActivity().contentResolver.openInputStream(selectedImageUrl)
+                        var bitmap=BitmapFactory.decodeStream(inputStream)
+                        imgNote.setImageBitmap(bitmap)
+                        imgNote.visibility=View.VISIBLE
+                        selectedImagePath=getPathFromUri(selectedImageUrl)!!
+                    }catch (e:Exception){
+                        Toast.makeText(requireContext(),e.message,Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 
