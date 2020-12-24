@@ -7,7 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.SearchView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import cn.edu.notes.Entities.Notes
 import cn.edu.notes.adapter.NotesAdapter
 import cn.edu.notes.database.NotesDatabase
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -52,7 +55,19 @@ class HomeFragment : BaseFragment() {
         launch {
             context?.let {
                 var notes=NotesDatabase.getDatabase(it).noteDao().getallNotes()
-                recycler_view.adapter=NotesAdapter(notes)
+                var adapter=NotesAdapter(notes)
+                recycler_view.adapter=adapter
+                search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(p0: String?): Boolean {
+                        //adapter.filter.filter(p0)
+                        return true
+                    }
+
+                    override fun onQueryTextChange(p0: String?): Boolean {
+                        adapter.filter.filter(p0)
+                        return true
+                    }
+                })
             }
         }
         create_notes.setOnClickListener {
@@ -66,5 +81,9 @@ class HomeFragment : BaseFragment() {
         }
         fragementTransition.replace(R.id.frame_layout,fragement).addToBackStack(fragement.javaClass.simpleName).commit()
     }
-    }
+
+//    override fun onItemClick(note: Notes) {
+//        TODO("Not yet implemented")
+//    }
+}
 

@@ -71,38 +71,38 @@
 
 
     <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/l1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvDateTime"
-        android:layout_margin="@dimen/_10sdp"
-        android:orientation="horizontal">
-
-    <View
-            android:background="@color/ColorBlue"
-            android:layout_height="match_parent"
-            android:layout_width="@dimen/_5sdp"
-            android:layout_marginStart="@dimen/_5sdp"
-            android:id="@+id/colorView"/>
-
-    <EditText
-            android:background="@null"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:id="@+id/etNoteSubTitle"
-            android:textSize="@dimen/_10ssp"
-            android:textColorHint="@color/ColorGray"
-            android:textColor="@color/ColorWhite"
-            android:padding="@dimen/_10sdp"
-            android:maxLines="1"
-            android:inputType="text"
-            android:hint="@string/notes_subtitle"
-            android:fontFamily="@font/manrope_regular"
-            android:ellipsize="end"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/l1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDateTime"
+            android:layout_margin="@dimen/_10sdp"
+            android:orientation="horizontal">
 
-</LinearLayout>
+        <View
+                android:background="@color/ColorBlue"
+                android:layout_height="match_parent"
+                android:layout_width="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:id="@+id/colorView"/>
+
+        <EditText
+                android:background="@null"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:id="@+id/etNoteSubTitle"
+                android:textSize="@dimen/_10ssp"
+                android:textColorHint="@color/ColorGray"
+                android:textColor="@color/ColorWhite"
+                android:padding="@dimen/_10sdp"
+                android:maxLines="1"
+                android:inputType="text"
+                android:hint="@string/notes_subtitle"
+                android:fontFamily="@font/manrope_regular"
+                android:ellipsize="end"/>
+
+    </LinearLayout>
 
     <ImageView
             android:id="@+id/imgNote"
@@ -122,7 +122,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/layoutWebUrl"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgNote"
+        app:layout_constraintTop_toBottomOf="@id/l1"
         android:padding="@dimen/_10sdp"
         android:layout_margin="@dimen/_10sdp"
         android:orientation="vertical"
@@ -144,7 +144,7 @@
             android:text="http://"/>
 
 
-    -<LinearLayout
+    <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="horizontal"
@@ -219,20 +219,20 @@
 
 
     <FrameLayout
-        android:layout_height="@dimen/_40sdp"
-        android:layout_width="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_height="@dimen/_40sdp"
+            android:layout_width="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-    <ImageView
-            android:layout_height="@dimen/_24sdp"
-            android:layout_width="@dimen/_24sdp"
-            android:src="@drawable/img_bar"
-            android:id="@+id/imgMore"
-            android:layout_gravity="center"/>
+        <ImageView
+                android:layout_height="@dimen/_24sdp"
+                android:layout_width="@dimen/_24sdp"
+                android:src="@drawable/img_bar"
+                android:id="@+id/imgMore"
+                android:layout_gravity="center"/>
 
-</FrameLayout>
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

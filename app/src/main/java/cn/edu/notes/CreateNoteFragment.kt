@@ -25,6 +25,7 @@ import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.graphics.BitmapFactory
 import android.provider.MediaStore
+import android.util.Patterns
 import pub.devrel.easypermissions.AppSettingsDialog
 import java.lang.Exception
 
@@ -35,6 +36,7 @@ class CreateNoteFragment : BaseFragment() ,EasyPermissions.PermissionCallbacks,E
     private var READ_STORAGE_PERM=123
     private var REQUEST_CODE_IMAGE=456
     private var selectedImagePath = ""
+    private var webLink = ""
     var selectedColor = "#171C26"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,14 +86,28 @@ class CreateNoteFragment : BaseFragment() ,EasyPermissions.PermissionCallbacks,E
             var noteBottomSheetFragment = NoteBottomSheetFragment.newInstance()
             noteBottomSheetFragment.show(requireActivity().supportFragmentManager,"Note Bottom Sheet Fragment")
         }
-    }
-    fun replaceFragment(fragement:Fragment,istranstion:Boolean){
-        val fragementTransition = activity!!.supportFragmentManager.beginTransaction()
-        if (istranstion){
-            fragementTransition.setCustomAnimations(android.R.anim.slide_out_right,android.R.anim.slide_in_left)
+        btnOk.setOnClickListener {
+            if (etWebLink.text.toString().trim().isNotEmpty()){
+                checkWebUrl()
+            }else{
+                Toast.makeText(requireContext(),"需要外部链接",Toast.LENGTH_SHORT).show()
+            }
         }
-        fragementTransition.replace(R.id.frame_layout,fragement).addToBackStack(fragement.javaClass.simpleName).commit()
+        btnCancel.setOnClickListener {
+            layoutWebUrl.visibility=View.GONE // 设置隐藏链接
+        }
+        tvWebLink.setOnClickListener {
+            var intent = Intent(Intent.ACTION_VIEW,Uri.parse(etWebLink.text.toString()))
+            startActivity(intent)
+        }
     }
+//    fun replaceFragment(fragement:Fragment,istranstion:Boolean){
+//        val fragementTransition = activity!!.supportFragmentManager.beginTransaction()
+//        if (istranstion){
+//            fragementTransition.setCustomAnimations(android.R.anim.slide_out_right,android.R.anim.slide_in_left)
+//        }
+//        fragementTransition.replace(R.id.frame_layout,fragement).addToBackStack(fragement.javaClass.simpleName).commit()
+//    }
     private fun saveNote(){
         if (etNoteTitle.text.isNullOrEmpty()){
             Toast.makeText(context,"需要标题",Toast.LENGTH_SHORT).show()
@@ -101,7 +117,7 @@ class CreateNoteFragment : BaseFragment() ,EasyPermissions.PermissionCallbacks,E
         }
         if(etNoteDesc.text.isNullOrEmpty()){
             Toast.makeText(context,"需要正文",Toast.LENGTH_SHORT).show()
-        }
+        } else{
         launch {
             var notes =Notes()
             notes.title=etNoteTitle.text.toString()
@@ -110,6 +126,7 @@ class CreateNoteFragment : BaseFragment() ,EasyPermissions.PermissionCallbacks,E
             notes.dateTime=currencDate
             notes.color=selectedColor
             notes.imgPath=selectedImagePath
+            notes.webLink=webLink
             context?.let {
                 NotesDatabase.getDatabase(it).noteDao().insertNotes(notes)
                 etNoteTitle.setText("")
@@ -118,6 +135,7 @@ class CreateNoteFragment : BaseFragment() ,EasyPermissions.PermissionCallbacks,E
                 imgNote.visibility=View.GONE
                 requireActivity().supportFragmentManager.popBackStack()
             }
+        }
         }
 
     }
@@ -151,10 +169,17 @@ class CreateNoteFragment : BaseFragment() ,EasyPermissions.PermissionCallbacks,E
                 }
                 "Image" ->{
                     readStorageTask()
-                    //layoutWebUrl.visibility = View.GONE
+                    layoutWebUrl.visibility = View.GONE
+                }
+                "WebUrl" ->{
+                    //展示外部链接
+                    layoutWebUrl.visibility = View.VISIBLE
                 }
                 else ->{
+                    imgNote.visibility = View.GONE
+                    layoutWebUrl.visibility = View.GONE
                     selectedColor = intent.getStringExtra("selectedColor")!!
+                    colorView.setBackgroundColor(Color.parseColor(selectedColor))
                 }
             }
         }
@@ -223,7 +248,17 @@ class CreateNoteFragment : BaseFragment() ,EasyPermissions.PermissionCallbacks,E
         }
     }
 
-
+    private fun checkWebUrl(){
+        if (Patterns.WEB_URL.matcher(etWebLink.text.toString()).matches()){
+            layoutWebUrl.visibility = View.GONE
+            etWebLink.isEnabled = false
+            webLink = etWebLink.text.toString()
+            tvWebLink.visibility = View.VISIBLE //设置可见
+            tvWebLink.text = etWebLink.text.toString()
+        }else{
+            Toast.makeText(requireContext(),"Url is not valid",Toast.LENGTH_SHORT).show()
+        }
+    }
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,requireActivity())
